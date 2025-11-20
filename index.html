@@ -338,10 +338,11 @@
             e.stopPropagation(); // Prevent document click handler from firing
             
             if (!isPaused) {
-              // Currently auto-advancing: pause it
+              // First tap: pause and advance
               pauseSlideshow();
+              advanceImageManually();
             } else {
-              // Already paused: manually advance to next image
+              // Subsequent taps: advance only
               advanceImageManually();
             }
           } else if (e.target === imageLayer) {
