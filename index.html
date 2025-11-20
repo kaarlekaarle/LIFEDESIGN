@@ -49,6 +49,8 @@
       const fieldImage = document.getElementById('fieldImage');
       let slideshowInterval = null;
       let currentImageIndex = 0;
+      let isPaused = false; // Mobile: tracks if slideshow is paused
+      let currentImages = null; // Track current slideshow images array
       
       // Images for slideshows
       const fieldImages = {
@@ -109,6 +111,8 @@
         }
         
         currentImageIndex = 0;
+        currentImages = images; // Store current images array
+        isPaused = false; // Reset pause state when starting new slideshow
         fieldImage.src = images[currentImageIndex];
         fieldImage.alt = fieldAltTexts[fieldName] || 'Work preview';
         imageLayer.classList.add('image-layer--visible');
@@ -127,6 +131,8 @@
           slideshowInterval = null;
         }
         imageLayer.classList.remove('image-layer--visible');
+        isPaused = false; // Reset pause state
+        currentImages = null; // Clear current images
       }
       
       // Show field, hide everything else
@@ -156,6 +162,24 @@
         
         stopSlideshow();
         currentImageIndex = 0;
+        isPaused = false; // Reset pause state
+      }
+      
+      // Mobile: manually advance to next image
+      function advanceImageManually() {
+        if (!currentImages || currentImages.length === 0) return;
+        
+        currentImageIndex = (currentImageIndex + 1) % currentImages.length;
+        fieldImage.src = currentImages[currentImageIndex];
+      }
+      
+      // Mobile: pause slideshow
+      function pauseSlideshow() {
+        if (slideshowInterval) {
+          clearInterval(slideshowInterval);
+          slideshowInterval = null;
+        }
+        isPaused = true;
       }
       
       // Basic image error handling
@@ -164,7 +188,7 @@
         stopSlideshow();
       });
       
-      // Mobile: click anywhere to close (except on field links)
+      // Mobile: click handler for closing slideshow when tapping outside
       let mobileClickHandler = null;
       
       function setupMobileClickToClose() {
@@ -173,10 +197,15 @@
           document.removeEventListener('click', mobileClickHandler, true);
         }
         
-        // Click anywhere on document to close (except on field links)
+        // Click handler for closing when tapping outside image-layer
         mobileClickHandler = (e) => {
           // Only handle when field is active and in mobile mode
           if (!document.body.classList.contains('field-active') || interactionMode !== 'touch') {
+            return;
+          }
+          
+          // Don't handle clicks inside image-layer (handled by imageLayer click handler)
+          if (e.target.closest('#imageLayer')) {
             return;
           }
           
@@ -185,7 +214,7 @@
             return;
           }
           
-          // Close on any other click
+          // Close on any other click (outside image-layer)
           hideField();
         };
         
@@ -295,12 +324,36 @@
         }
       });
       
-      // Click on image layer background to close slideshow
+      // Click handler for image layer - different behavior for mobile vs desktop
       imageLayer.addEventListener('click', (e) => {
-        // Only close if clicking directly on the image-layer container or the image itself
-        // Don't close if clicking on a link or other interactive element
-        if (e.target === imageLayer || e.target === fieldImage) {
-          hideField();
+        // Mobile mode: pause/advance on image, close on background
+        if (interactionMode === 'touch') {
+          // Only handle when field is active
+          if (!document.body.classList.contains('field-active')) {
+            return;
+          }
+          
+          if (e.target === fieldImage) {
+            // Tap on image itself: pause if auto-advancing, advance if paused
+            e.stopPropagation(); // Prevent document click handler from firing
+            
+            if (!isPaused) {
+              // Currently auto-advancing: pause it
+              pauseSlideshow();
+            } else {
+              // Already paused: manually advance to next image
+              advanceImageManually();
+            }
+          } else if (e.target === imageLayer) {
+            // Tap on background (overlay): close slideshow
+            e.stopPropagation(); // Prevent document click handler from firing
+            hideField();
+          }
+        } else {
+          // Desktop mode: close on click (existing behavior)
+          if (e.target === imageLayer || e.target === fieldImage) {
+            hideField();
+          }
         }
       });
       

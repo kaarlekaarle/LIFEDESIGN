@@ -65,6 +65,13 @@ body.field-active .image-layer {
   opacity: 1;
 }
 
+/* Mobile: enable pointer events on image for tap interactions */
+@media (max-width: 767px) {
+  body.field-active .image-layer img {
+    pointer-events: auto;
+  }
+}
+
 /* Hero area - grid item in row 1, stacked above image-layer */
 .hero {
   grid-row: 1;
