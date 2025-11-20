@@ -1,0 +1,10 @@
+* text=auto eol=lf
+
+# Ensure shell scripts keep LF
+*.sh text eol=lf
+
+# Treat lockfiles as text
+*.lock text eol=lf
+
+# GitHub linguist adjustments (keep docs visible)
+docs/** linguist-documentation

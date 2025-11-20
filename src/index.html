@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Life Design</title>
+  <link rel="stylesheet" href="styles/global.css">
+  <link rel="stylesheet" href="styles/home.css">
+</head>
+<body class="preload">
+  <div class="page">
+    <div class="image-layer" id="imageLayer">
+      <img id="fieldImage" src="" alt="">
+    </div>
+    
+    <main class="hero">
+      <div class="hero-inner">
+        <div class="logo" id="logo">
+          <img src="assets/images/LD_logo.svg" alt="Life Design">
+        </div>
+      </div>
+    </main>
+
+    <footer class="bottom-text" id="bottomText">
+      Life Design is a creative collaboration between Leo Karhunen and Adam Tickle. For us, life and design are inseparable. Our work moves between <a href="#" class="field-link" data-field="identities" role="button" aria-label="Show identities work" aria-expanded="false">identities</a>, <a href="#" class="field-link" data-field="campaigns" role="button" aria-label="Show campaigns work" aria-expanded="false">campaigns</a>, and <a href="#" class="field-link" data-field="cultural-artefacts" role="button" aria-label="Show cultural artefacts work" aria-expanded="false">cultural artefacts</a>, often in the fields we love most: music, art, everyday life. For enquiries or commissions, please contact us <a href="#" class="contact-link">here</a>.
+    </footer>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const SLIDESHOW_INTERVAL_MS = 1000;
+      
+      // Interaction mode detection
+      function computeInteractionMode() {
+        // Force mobile logic on screens smaller than 768px
+        if (window.innerWidth < 768) {
+          return 'touch';
+        }
+        const fineHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        return fineHover ? 'desktop' : 'touch';
+      }
+      
+      let interactionMode = computeInteractionMode();
+      document.body.classList.toggle('mobile-mode', interactionMode === 'touch');
+      
+      let fieldLinks = document.querySelectorAll('.field-link');
+      const bottomText = document.getElementById('bottomText');
+      const imageLayer = document.getElementById('imageLayer');
+      const fieldImage = document.getElementById('fieldImage');
+      let slideshowInterval = null;
+      let currentImageIndex = 0;
+      
+      // Images for slideshows
+      const fieldImages = {
+        'identities': [
+          'assets/images/identities/Screenshot 2025-11-20 at 14.26.47.png',
+          'assets/images/identities/Screenshot 2025-11-20 at 14.26.55.png',
+          'assets/images/identities/Screenshot 2025-11-20 at 14.27.00.png',
+          'assets/images/identities/Screenshot 2025-11-20 at 14.27.06.png',
+          'assets/images/identities/Screenshot 2025-11-20 at 14.27.12.png',
+          'assets/images/identities/Screenshot 2025-11-20 at 14.27.17.png',
+          'assets/images/identities/Screenshot 2025-11-20 at 14.27.24.png',
+          'assets/images/identities/Screenshot 2025-11-20 at 14.27.30.png',
+          'assets/images/identities/Screenshot 2025-11-20 at 14.27.36.png',
+          'assets/images/identities/Screenshot 2025-11-20 at 14.27.41.png',
+          'assets/images/identities/Screenshot 2025-11-20 at 14.27.47.png',
+          'assets/images/identities/Screenshot 2025-11-20 at 14.27.52.png',
+          'assets/images/identities/Screenshot 2025-11-20 at 14.27.58.png',
+          'assets/images/identities/Screenshot 2025-11-20 at 14.28.03.png'
+        ],
+        'campaigns': [
+          'assets/images/campaigns/Screenshot 2025-11-20 at 14.30.14.png',
+          'assets/images/campaigns/Screenshot 2025-11-20 at 14.30.20.png',
+          'assets/images/campaigns/Screenshot 2025-11-20 at 14.30.26.png',
+          'assets/images/campaigns/Screenshot 2025-11-20 at 14.30.31.png',
+          'assets/images/campaigns/Screenshot 2025-11-20 at 14.34.26.png'
+        ],
+        'cultural-artefacts': [
+          'assets/images/cultural-artefacts/Screenshot 2025-11-20 at 14.34.46.png',
+          'assets/images/cultural-artefacts/Screenshot 2025-11-20 at 14.35.10.png',
+          'assets/images/cultural-artefacts/Screenshot 2025-11-20 at 14.35.16.png',
+          'assets/images/cultural-artefacts/Screenshot 2025-11-20 at 14.35.28.png',
+          'assets/images/cultural-artefacts/Screenshot 2025-11-20 at 14.35.33.png',
+          'assets/images/cultural-artefacts/Screenshot 2025-11-20 at 14.35.38.png'
+        ]
+      };
+      
+      // Preload all slideshow images once
+      const allImages = Object.values(fieldImages).flat();
+      allImages.forEach(src => {
+        const img = new Image();
+        img.src = src;
+      });
+      
+      // Optional: Field-specific alt text
+      const fieldAltTexts = {
+        identities: 'Identities work preview',
+        campaigns: 'Campaigns work preview',
+        'cultural-artefacts': 'Cultural artefacts work preview'
+      };
+      
+      // Slideshow functions
+      function startSlideshow(images, fieldName) {
+        stopSlideshow(); // always clear previous
+        
+        if (!images || images.length === 0) {
+          imageLayer.classList.remove('image-layer--visible');
+          return;
+        }
+        
+        currentImageIndex = 0;
+        fieldImage.src = images[currentImageIndex];
+        fieldImage.alt = fieldAltTexts[fieldName] || 'Work preview';
+        imageLayer.classList.add('image-layer--visible');
+        
+        if (images.length > 1) {
+          slideshowInterval = setInterval(() => {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            fieldImage.src = images[currentImageIndex];
+          }, SLIDESHOW_INTERVAL_MS);
+        }
+      }
+      
+      function stopSlideshow() {
+        if (slideshowInterval) {
+          clearInterval(slideshowInterval);
+          slideshowInterval = null;
+        }
+        imageLayer.classList.remove('image-layer--visible');
+      }
+      
+      // Show field, hide everything else
+      function showField(link, fieldName) {
+        document.body.classList.add('field-active');
+        
+        fieldLinks.forEach(l => {
+          l.classList.remove('active');
+          l.setAttribute('aria-expanded', 'false');
+        });
+        
+        link.classList.add('active');
+        link.setAttribute('aria-expanded', 'true');
+        
+        const images = fieldImages[fieldName];
+        startSlideshow(images, fieldName);
+      }
+      
+      // Hide field, show everything else
+      function hideField() {
+        document.body.classList.remove('field-active');
+        
+        fieldLinks.forEach(link => {
+          link.classList.remove('active');
+          link.setAttribute('aria-expanded', 'false');
+        });
+        
+        stopSlideshow();
+        currentImageIndex = 0;
+      }
+      
+      // Basic image error handling
+      fieldImage.addEventListener('error', (e) => {
+        console.error('Failed to load slideshow image:', e.target.src);
+        stopSlideshow();
+      });
+      
+      // Mobile: click anywhere to close (except on field links)
+      let mobileClickHandler = null;
+      
+      function setupMobileClickToClose() {
+        // Remove existing handler if any
+        if (mobileClickHandler) {
+          document.removeEventListener('click', mobileClickHandler, true);
+        }
+        
+        // Click anywhere on document to close (except on field links)
+        mobileClickHandler = (e) => {
+          // Only handle when field is active and in mobile mode
+          if (!document.body.classList.contains('field-active') || interactionMode !== 'touch') {
+            return;
+          }
+          
+          // Don't close if clicking on a field link (they handle their own toggle)
+          if (e.target.closest('.field-link')) {
+            return;
+          }
+          
+          // Close on any other click
+          hideField();
+        };
+        
+        document.addEventListener('click', mobileClickHandler, true);
+      }
+      
+      // Setup mobile click-to-close handler
+      if (interactionMode === 'touch') {
+        setupMobileClickToClose();
+      }
+      
+      // Dynamic height calculation for image layer (desktop only)
+      function updateImageLayerHeight() {
+        if (!bottomText || !imageLayer) return;
+        
+        // On mobile when field-active, use fixed positioning (handled by CSS)
+        // Don't set inline height that would override CSS
+        if (interactionMode === 'touch' && document.body.classList.contains('field-active')) {
+          imageLayer.style.height = '';
+          return;
+        }
+        
+        const bottomHeight = bottomText.offsetHeight;
+        const targetHeight = window.innerHeight - bottomHeight;
+        imageLayer.style.height = `${targetHeight}px`;
+      }
+      
+      // Update interaction mode on resize
+      window.addEventListener('resize', () => {
+        const newMode = computeInteractionMode();
+        if (newMode !== interactionMode) {
+          interactionMode = newMode;
+          document.body.classList.toggle('mobile-mode', interactionMode === 'touch');
+          
+          if (interactionMode === 'touch') {
+            setupMobileClickToClose();
+          } else if (mobileClickHandler) {
+            document.removeEventListener('click', mobileClickHandler, true);
+            mobileClickHandler = null;
+          }
+          
+          setupFieldLinks();
+          updateImageLayerHeight(); // Update height when mode changes
+        }
+        updateImageLayerHeight(); // Update height on any resize
+      });
+      
+      // Setup field links with appropriate event listeners
+      function setupFieldLinks() {
+        // Remove existing listeners by cloning nodes
+        fieldLinks.forEach(link => {
+          const newLink = link.cloneNode(true);
+          link.parentNode.replaceChild(newLink, link);
+        });
+        
+        // Re-query after cloning
+        fieldLinks = document.querySelectorAll('.field-link');
+        
+        fieldLinks.forEach(link => {
+          const fieldName = link.getAttribute('data-field');
+          
+          if (interactionMode === 'touch') {
+            // Mobile: tap-to-toggle
+            const toggleMobile = (e) => {
+              e.preventDefault();
+              const isActive = link.classList.contains('active');
+              if (isActive) {
+                hideField();
+              } else {
+                showField(link, fieldName);
+              }
+            };
+            
+            link.addEventListener('click', toggleMobile);
+            link.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                toggleMobile(e);
+              }
+            });
+          } else {
+            // Desktop: hover-based
+            const activateDesktop = (e) => {
+              e.preventDefault();
+              showField(link, fieldName);
+            };
+            
+            link.addEventListener('mouseenter', activateDesktop);
+            link.addEventListener('click', activateDesktop);
+            link.addEventListener('mouseleave', hideField);
+            link.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                activateDesktop(e);
+              }
+            });
+          }
+        });
+      }
+      
+      // Initial setup
+      setupFieldLinks();
+      updateImageLayerHeight(); // Set initial image layer height
+      
+      // Esc key to close slideshow
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && document.body.classList.contains('field-active')) {
+          hideField();
+        }
+      });
+      
+      // Click on image layer background to close slideshow
+      imageLayer.addEventListener('click', (e) => {
+        // Only close if clicking directly on the image-layer container or the image itself
+        // Don't close if clicking on a link or other interactive element
+        if (e.target === imageLayer || e.target === fieldImage) {
+          hideField();
+        }
+      });
+      
+      // Optional: Cleanup function
+      function cleanup() {
+        stopSlideshow();
+      }
+      
+      window.addEventListener('beforeunload', cleanup);
+      
+      // Remove preload class AFTER JS has fully initialized
+      requestAnimationFrame(() => {
+        document.body.classList.remove('preload');
+      });
+    });
+  </script>
+</body>
+</html>
+

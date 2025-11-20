@@ -1,0 +1,25 @@
+# VibeCoding project configuration (optional)
+# Copy and adjust values for your project. All fields optional.
+
+# Default mode for setup/health scripts: mvp or full
+MODE=mvp
+
+# Feature flags (comma-separated). Known: content,hero,blog,team,products
+# Leave empty for minimal setup.
+FEATURES=
+
+# Paths to scan for placeholders (comma-separated)
+SCAN_PATHS=public,src/assets/data
+
+# Paths to ignore when scanning (comma-separated)
+IGNORE_PATHS=node_modules,dist
+
+# Placeholder tokens (regex-friendly strings)
+PLACEHOLDER_REQUIRED_TOKENS=CHANGE_ME_REQUIRED
+PLACEHOLDER_OPTIONAL_TOKENS=CHANGE_ME_OPTIONAL
+
+# Treat example.com references as violations
+FAIL_ON_EXAMPLE_DOMAIN=true
+
+# Silence non-critical warnings (0 or 1)
+HEALTH_SILENT=0

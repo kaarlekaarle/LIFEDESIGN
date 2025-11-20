@@ -1,0 +1,23 @@
+:root {
+  --spacing-xs: 0.25rem;
+  --spacing-s: 0.5rem;
+  --spacing-m: 1rem;
+  --spacing-l: 2rem;
+
+  --font-size-base: 1rem;
+  --font-size-lg: 1.25rem;
+
+  /* Grid System */
+  --grid-columns-mobile: 1;
+  --grid-columns-tablet: 2;
+  --grid-columns-desktop: 6;
+  --grid-gap: var(--spacing-m);
+
+  /* Breakpoints */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+
+  /* Add colours, etc */
+}
