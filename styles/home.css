@@ -1,4 +1,4 @@
-@import './_variables.css';
+@import './variables.css';
 
 /* Preload: hide the page until JS has done its first layout pass */
 body.preload {
