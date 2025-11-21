@@ -242,6 +242,20 @@
         imageLayer.style.height = `${targetHeight}px`;
       }
       
+      // Update mobile text size based on logo height (40% of logo height)
+      function updateMobileTextSize() {
+        if (interactionMode === 'touch' && window.innerWidth < 768) {
+          const inlineLogo = document.querySelector('.inline-logo');
+          if (inlineLogo && inlineLogo.offsetHeight > 0) {
+            const logoHeight = inlineLogo.offsetHeight;
+            const textSize = logoHeight * 0.4; // 40% of logo height
+            bottomText.style.fontSize = `${textSize}px`;
+          }
+        } else {
+          bottomText.style.fontSize = ''; // Reset to CSS default on desktop
+        }
+      }
+      
       // Update interaction mode on resize
       window.addEventListener('resize', () => {
         const newMode = computeInteractionMode();
@@ -260,6 +274,7 @@
           updateImageLayerHeight(); // Update height when mode changes
         }
         updateImageLayerHeight(); // Update height on any resize
+        updateMobileTextSize(); // Update mobile text size on resize
       });
       
       // Setup field links with appropriate event listeners
@@ -316,6 +331,25 @@
       // Initial setup
       setupFieldLinks();
       updateImageLayerHeight(); // Set initial image layer height
+      
+      // Update mobile text size after logo loads and renders
+      if (interactionMode === 'touch') {
+        const inlineLogo = document.querySelector('.inline-logo');
+        if (inlineLogo) {
+          // Wait for logo to load and render
+          if (inlineLogo.complete) {
+            requestAnimationFrame(() => {
+              setTimeout(updateMobileTextSize, 0);
+            });
+          } else {
+            inlineLogo.addEventListener('load', () => {
+              requestAnimationFrame(() => {
+                setTimeout(updateMobileTextSize, 0);
+              });
+            });
+          }
+        }
+      }
       
       // Esc key to close slideshow
       document.addEventListener('keydown', (e) => {
