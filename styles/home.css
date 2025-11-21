@@ -171,6 +171,11 @@ body.field-active .hero {
     display: none;
   }
   
+  /* Hide br tag before contact line on desktop */
+  .bottom-text .contact-break {
+    display: none;
+  }
+  
   /* Center slideshow in full viewport on desktop when active */
   body.field-active .image-layer {
     position: fixed !important;
@@ -279,6 +284,11 @@ body.field-active .hero {
   
   /* Remove extra spacing from br tag after logo on mobile */
   .bottom-text .inline-logo + br {
+    display: none;
+  }
+  
+  /* Hide space before 'is' on mobile */
+  .bottom-text .logo-space {
     display: none;
   }
   
