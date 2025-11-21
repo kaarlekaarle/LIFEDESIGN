@@ -292,6 +292,11 @@ body.field-active .hero {
     display: none;
   }
   
+  /* Hide br tag before contact line on mobile too */
+  .bottom-text .contact-break {
+    display: none;
+  }
+  
   /* Center slideshow in viewport on mobile when active */
   body.field-active .image-layer {
     position: fixed !important;
