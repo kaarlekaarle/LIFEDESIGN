@@ -52,17 +52,23 @@ body.field-active .image-layer {
   height: auto;
   object-fit: contain;
   pointer-events: none;
-  display: none;
+  display: block;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.66s ease;
   /* Ensure images don't affect layout */
   margin: 0;
   vertical-align: top;
 }
 
 .image-layer--visible img {
-  display: block;
   opacity: 1;
+}
+
+/* Desktop: fade in/out animation for slideshow (0.5s) */
+@media (min-width: 768px) {
+  .image-layer img {
+    transition: opacity 0.66s ease;
+  }
 }
 
 /* Mobile: enable pointer events on image for tap interactions */
@@ -141,6 +147,8 @@ body.field-active .hero {
   width: auto;
   vertical-align: -0.1em; /* Fine-tune baseline alignment */
   display: inline-block;
+  opacity: 1;
+  transition: opacity 0.66s ease;
 }
 
 /* When active, bottom text content is invisible but takes space (mobile only) */
@@ -155,15 +163,21 @@ body.field-active .hero {
   }
 }
 
-/* Desktop: hide all text when hovering over a field link */
+/* Desktop: fade out text and logo when hovering over a field link */
 @media (min-width: 768px) {
   body.field-active .bottom-text {
-    color: transparent; /* Hide text content on desktop when field-active */
+    color: transparent; /* Hide text content but keep container visible for active link */
   }
   
-  /* Hide inline logo when field-active on desktop */
+  /* Fade out inline logo when field-active on desktop */
   body.field-active .bottom-text .inline-logo {
     opacity: 0;
+  }
+  
+  /* Fade out contact line when field-active on desktop */
+  body.field-active .bottom-text .contact-line {
+    opacity: 0;
+    transition: opacity 0.66s ease;
   }
   
   /* Hide br tag after logo on desktop to keep logo inline with text */
@@ -193,6 +207,8 @@ body.field-active .hero {
   text-decoration-thickness: 1px;
   text-underline-offset: 2px;
   cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.66s ease;
 }
 
 /* Hide all field links when active (mobile only) */
@@ -210,13 +226,21 @@ body.field-active .hero {
 
 /* Desktop: hide all links except the active one when hovering */
 @media (min-width: 768px) {
+  .field-link {
+    transition: opacity 0.66s ease;
+  }
+  
+  .contact-link {
+    transition: opacity 0.66s ease;
+  }
+  
   body.field-active .field-link {
-    opacity: 0; /* Hide all field links */
+    opacity: 0; /* Fade out all field links */
     pointer-events: none;
   }
 
   body.field-active .field-link.active {
-    opacity: 1; /* Show only the active link */
+    opacity: 1 !important; /* Keep active link visible with higher specificity */
     pointer-events: auto;
     color: #000;
     text-decoration: none !important;
@@ -234,6 +258,8 @@ body.field-active .hero {
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 2px;
+  opacity: 1;
+  transition: opacity 0.66s ease;
 }
 
 
