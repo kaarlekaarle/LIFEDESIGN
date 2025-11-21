@@ -165,6 +165,10 @@ body.field-active .hero {
 
 /* Desktop: fade out text and logo when hovering over a field link */
 @media (min-width: 768px) {
+  .bottom-text {
+    transition: color 0.66s ease;
+  }
+  
   body.field-active .bottom-text {
     color: transparent; /* Hide text content but keep container visible for active link */
   }
