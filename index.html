@@ -242,13 +242,13 @@
         imageLayer.style.height = `${targetHeight}px`;
       }
       
-      // Update mobile text size based on logo height (60% of logo height)
+      // Update mobile text size based on logo height (50% of logo height)
       function updateMobileTextSize() {
         if (interactionMode === 'touch' && window.innerWidth < 768) {
           const inlineLogo = document.querySelector('.inline-logo');
           if (inlineLogo && inlineLogo.offsetHeight > 0) {
             const logoHeight = inlineLogo.offsetHeight;
-            const textSize = logoHeight * 0.6; // 60% of logo height
+            const textSize = logoHeight * 0.5; // 50% of logo height
             bottomText.style.fontSize = `${textSize}px`;
           }
         } else {
